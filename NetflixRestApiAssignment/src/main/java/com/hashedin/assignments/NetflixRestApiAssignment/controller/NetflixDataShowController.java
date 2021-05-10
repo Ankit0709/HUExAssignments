@@ -8,12 +8,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,13 +35,22 @@ public class NetflixDataShowController {
      * @return
      */
     @GetMapping(value = "/tvshows", params ="count", produces = "application/json")
-    public List<NetflixDataModel> getFirstNShows(@RequestParam Integer count){
+    public List<NetflixDataModel> getFirstNShows(HttpServletRequest request,
+                                                 HttpServletResponse response,
+                                                 @RequestParam Integer count){
         List<NetflixDataModel> showsList = new ArrayList<>();
+        Instant startTime,endTime;
+        startTime = Instant.now();
         try{
             showsList = netflixDataShowService.getFirstNNetflixShows(count);
         } catch (Exception ex){
             LOGGER.error("Error is "+ex.getMessage());
         }
+        endTime = Instant.now();
+        long time = Duration.between(startTime,endTime).toMillis();
+        LOGGER.info("Time Taken to Execute the request :"+time+" milliseconds .");
+        response.setHeader("X-TIME-TO-EXECUTE", String.valueOf(time));
+
         return showsList;
     }
 
@@ -50,13 +62,22 @@ public class NetflixDataShowController {
      * @return
      */
     @GetMapping(value = "/tvshows", params = "movieType", produces = "application/json")
-    public List<NetflixDataModel> getAllNetflixShowsOnListedInBasis(@RequestParam String movieType){
+    public List<NetflixDataModel> getAllNetflixShowsOnListedInBasis(HttpServletRequest request,
+                                                                    HttpServletResponse response,
+                                                                    @RequestParam String movieType){
         List<NetflixDataModel> showList = new ArrayList<>();
+        Instant startTime,endTime;
+        startTime = Instant.now();
         try{
             showList = netflixDataShowService.getAllNetflixHorrorShows(movieType);
         }catch (Exception ex){
             LOGGER.error("Error is "+ex.getMessage());
         }
+        endTime = Instant.now();
+        long time = Duration.between(startTime,endTime).toMillis();
+        LOGGER.info("Time Taken to Execute the request :"+time+" milliseconds .");
+        response.setHeader("X-TIME-TO-EXECUTE", String.valueOf(time));
+
         return showList;
     }
 
@@ -67,15 +88,25 @@ public class NetflixDataShowController {
      * @return
      */
     @GetMapping(value = "/tvshows", params= "country" ,produces = "application/json")
-    public List<NetflixDataModel> getAllNetflixShowsOnCountryBasis(@RequestParam String country){
+    public List<NetflixDataModel> getAllNetflixShowsOnCountryBasis(HttpServletRequest request,
+                                                                   HttpServletResponse response,
+                                                                   @RequestParam String country){
         List<NetflixDataModel> showList = new ArrayList<>();
+        Instant startTime,endTime;
+        startTime = Instant.now();
         try{
             showList = netflixDataShowService.getAllNetflixShowsOnCountryBasis(country);
         }catch (Exception ex){
             LOGGER.error("Error is "+ex.getMessage());
         }
+        endTime = Instant.now();
+        long time = Duration.between(startTime,endTime).toMillis();
+        LOGGER.info("Time Taken to Execute the request :"+time+" milliseconds .");
+        response.setHeader("X-TIME-TO-EXECUTE", String.valueOf(time));
+
         return showList;
     }
+
     /**
      * Method Filters all Netflix Records on Start Date and End date Basis
      * @param startdate
@@ -83,9 +114,14 @@ public class NetflixDataShowController {
      * @return
      */
 
+
     @GetMapping(value = "/tvshows",params = {"startdate","enddate"},produces = "application/json")
-    public List<NetflixDataModel>  getAllNetflixShowsOnStartAndEndDateBasis(@RequestParam String startdate,@RequestParam String enddate){
+    public List<NetflixDataModel>  getAllNetflixShowsOnStartAndEndDateBasis(HttpServletRequest request,
+                                                                            HttpServletResponse response,
+                                                                            @RequestParam String startdate,@RequestParam String enddate){
         List<NetflixDataModel> showList = new ArrayList<>();
+        Instant startTime,endTime;
+        startTime = Instant.now();
         DateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
         try{
             LocalDate userselectedStartDate = dateFormat.parse(startdate).toInstant().
@@ -96,6 +132,11 @@ public class NetflixDataShowController {
         } catch (Exception ex){
             LOGGER.error("Error is "+ex.getMessage());
         }
+        endTime = Instant.now();
+        long time = Duration.between(startTime,endTime).toMillis();
+        LOGGER.info("Time Taken to Execute the request :"+time+" milliseconds .");
+        response.setHeader("X-TIME-TO-EXECUTE", String.valueOf(time));
+
         return  showList;
     }
     /**
