@@ -76,7 +76,12 @@ public class NetflixDataShowController {
         }
         return showList;
     }
-
+    /**
+     * Method Filters all Netflix Records on Start Date and End date Basis
+     * @param startdate
+     * @param enddate
+     * @return
+     */
 
     @GetMapping(value = "/tvshows",params = {"startdate","enddate"},produces = "application/json")
     public List<NetflixDataModel>  getAllNetflixShowsOnStartAndEndDateBasis(@RequestParam String startdate,@RequestParam String enddate){
