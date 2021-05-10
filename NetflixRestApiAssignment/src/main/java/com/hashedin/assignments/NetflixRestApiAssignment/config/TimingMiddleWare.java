@@ -18,14 +18,11 @@ import java.time.Instant;
 public class TimingMiddleWare implements HandlerInterceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimingMiddleWare.class);
-
-    Instant startTime,endTime;
-
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,
                              Object handler) throws Exception {
-        startTime = Instant.now();
+
         return true;
     }
 
@@ -34,9 +31,5 @@ public class TimingMiddleWare implements HandlerInterceptor {
                            HttpServletResponse response,
                            Object handler,
                            ModelAndView modelAndView) throws Exception {
-        endTime = Instant.now();
-        long time = Duration.between(startTime,endTime).toMillis();
-        LOGGER.info("Time Taken to Execute the request :"+time+" milliseconds .");
-        response.setHeader("X-TIME-TO-EXECUTE", String.valueOf(time));
-    }
+       }
 }
