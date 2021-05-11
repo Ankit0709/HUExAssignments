@@ -7,25 +7,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 
 @Configuration
 @EnableScheduling
 public class DataScheduling {
 
     private static final Logger LOGGER = LogManager.getLogger(DataScheduling.class);
-    private static final String  FILE_PATH = "src/main/resources/static/netflix_titles.csv";
+    private static final String  FILE_PATH = "data/netflix_titles.csv";
     @Autowired
     private NetflixDataRepository netflixDataRepository;
 
     @Scheduled(fixedDelay = 5000)
     public void  storeDataFixedDelayTask(){
         try {
-            BufferedReader csvReader = new BufferedReader(new FileReader(FILE_PATH));
+
+            BufferedReader csvReader = new BufferedReader(
+                    new InputStreamReader(getClass().getClassLoader().
+                            getResourceAsStream(FILE_PATH)));
             String row = null;
             int rowNo = 0;
 
