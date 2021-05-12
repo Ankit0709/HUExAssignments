@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  mysql-service:
+    image: openjdk:8
+    networks:
+      - network-data-rest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=netflix_data
+  web-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - network-data-rest
+    depends_on:
+      - mysql-service
+networks:
+  network-data-rest:
+    driver: bridge
